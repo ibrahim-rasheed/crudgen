@@ -19,10 +19,16 @@ class Crudgen
         return $this;
     }
 
-
     //convert object to array and return
     public function toArray()
     {
         return (array) $this->result;
+    }
+
+    //search and replace. Method chainable.
+    public function searchReplace($searchReplace)
+    {
+        $this->result = str_replace(array_keys($searchReplace), array_values($searchReplace), $this->result);
+        return $this;
     }
 }

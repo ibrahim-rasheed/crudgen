@@ -5,8 +5,10 @@
     <a href="example.php">REFRESH</a>
 
     <form action="example.php" method="post">
+        path: <input type="text" name="path" value="<?php $_POST[" path"] ??= 'emp'; ?>"><br>
+        name: <input type="text" name="name"><br>
         title: <input type="text" name="title"><br>
-        E-mail: <input type="text" name="email"><br>
+
         <input type="submit" value="Generate">
     </form>
     <p>Route::get('/contract', 'ContractTypesController@index')->name('contract.index');</p>
@@ -18,8 +20,6 @@
 
 <?php
 if (isset($_POST["title"]) and $_POST["title"] != "") {
-    $title = $_POST["title"];
-
 
     // include class
     require_once("Crudgen.php");
@@ -27,19 +27,21 @@ if (isset($_POST["title"]) and $_POST["title"] != "") {
     // initialize class
     $instance = new Crudgen();
 
-    // open file and process text
-    $results = $instance->fileToString("stubs/view-main.blade.php");
-    //->hasAnyRepeated(['b'], 2)
-    //->hasConsecutive(3)
-    //->hasAny(['i', 'b', 'b', 'e'])
-    // ->hasAll(['i', 'b', 'e', 'r'])
-    //->toArray();
+    // aray of strings to search and replace
+    $search_replace_arr = [
+        "path" => $_POST["path"],
+        "name" => $_POST["name"],
+        "title" => $_POST["title"],
+    ];
 
-    $replaced = str_replace("{{ title }}", $title, $results->result);
+    // open file and process text
+    $results = $instance->fileToString("stubs/view-main.blade.php")
+        ->searchReplace($search_replace_arr);
+    //->toArray();
 
     // print results
     echo "<pre>";
-    print_r($replaced);
+    print_r($results);
     echo "</pre>";
 } //end if
 ?>
