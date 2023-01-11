@@ -36,7 +36,7 @@
             @include('partials.alerts')
 
 
-            @livewire('duty.working-hrs.show')
+            @livewire('{{ path }}.{{ view_main }}')
 
 
         </div>

@@ -28,7 +28,16 @@ class Crudgen
     //search and replace. Method chainable.
     public function searchReplace($searchReplace)
     {
-        $this->result = str_replace(array_keys($searchReplace), array_values($searchReplace), $this->result);
+        //wrap curly braces around keys
+        $find = array_map(function ($key) {
+            return "{{ " . $key . " }}";
+        }, array_flip($searchReplace));
+
+        //replace
+        $replace = array_values($searchReplace);
+
+        //replace and return
+        $this->result = str_replace($find, $replace, $this->result);
         return $this;
     }
 }
