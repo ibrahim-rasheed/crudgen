@@ -66,6 +66,15 @@ if (isset($_GET["action"]) and $_GET["action"] != "") {
         }
     }
 
+    foreach ($stubs as $key => $value) {
+        //getDirName
+        $instance->getDirName($value['destination'])
+            ->createDir($instance->result)
+            ->fileToString($value['source'])
+            ->searchReplace($search_replace_arr)
+            ->createFile('_cruds' . '/' . $path_start . '/' . $value['destination'], $instance->result);
+    }
+
     // open file and process text
     $results = $instance->fileToString("stubs/view-main.blade.php")
         ->searchReplace($search_replace_arr);
