@@ -1,5 +1,16 @@
 <html>
 
+<head>
+    <style>
+        pre code {
+            background-color: #eee;
+            border: 1px solid #999;
+            display: block;
+            padding: 20px;
+        }
+    </style>
+</head>
+
 <body>
 
     <a href="example.php">REFRESH</a>
@@ -38,7 +49,7 @@ if (isset($_GET["action"]) and $_GET["action"] != "") {
     // array of named arrays for source stubs and destination files
     $stubs = [
         "route-line" => [
-            'source' => 'stubs/route.php',
+            'source' => 'stubs/route.php.stub',
             'destination' => 'route.php',
         ],
         "controller" => [
@@ -81,26 +92,25 @@ if (isset($_GET["action"]) and $_GET["action"] != "") {
 
     foreach ($stubs as $stub) {
 
-        $dir = $instance->getDirName($stub['destination'])
-            ->createDir($instance->result);
-        $content = $instance->fileToString($stub['source'])
-            ->searchReplace($search_replace_arr);
-        $instance->createFile('_cruds' . '/' . $stub['destination'], $content->result);
+        //create and get dir name
+        $dir = $instance->getDirName($stub['destination'])->createDir($instance->result);
+        //get file content
+        $content = fileToString($stub['source']);
+        //replace fields
+        $replaced = searchReplace($search_replace_arr, $content);
+        //encode html
+        $encoded = htmlEncode($replaced);
+        //create file
+        $file = '_cruds' . '/' . $stub['destination'];
+        $instance->createFile($file, $content);
 
-        echo "<hr>";
+        echo "<div style='background-color:LightBlue;padding: 10px;'>";
         echo $stub['destination'] . "<br>";
         echo $dir . "<br>";
-        echo "<hr>";
-        echo "<pre>";
-        echo $content->result;
-        echo "</pre>";
+        echo "</div>";
+        echo "<pre><code>";
+        echo $encoded;
+        echo "</code></pre>";
     }
-
-    // open file and process text
-    // $results = $instance->fileToString("stubs/view-main.blade.php")
-    //     ->searchReplace($search_replace_arr);
-    //->toArray();
-
-
 } //end if
 ?>

@@ -60,3 +60,31 @@ function getRandomString($length)
     }
     return $randomString;
 }
+
+
+//read file and get the content as a string.
+function fileToString($file)
+{
+    return file_get_contents($file);
+}
+
+//HTML encode a string.
+function htmlEncode($string)
+{
+    return htmlspecialchars($string);
+}
+
+//search and replace. Method chainable.
+function searchReplace($searchReplace, $content)
+{
+    //wrap curly braces around keys
+    $find = array_map(function ($key) {
+        return "{{ " . $key . " }}";
+    }, array_flip($searchReplace));
+
+    //replace
+    $replace = array_values($searchReplace);
+
+    //replace and return
+    return str_replace($find, $replace, $content);
+}
