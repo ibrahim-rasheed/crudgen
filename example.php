@@ -28,9 +28,8 @@ if (isset($_GET["action"]) and $_GET["action"] != "") {
 
     // array of crud information
     $crud = [
-        'path' => 'hr/staff/contract', // eg: hr/contract
-        'name' => 'working hours',
-        'title' => 'contract',
+        'path' => 'duty.working-hour', // words separated by a hyphen (-) and folder names separated by a dot (.) eg: working-hour.another-hour
+        'name' => 'working hour', // Preferably singular tense, one word. If more than one word, use space to separate. eg: working hour
     ];
 
     // path start string
@@ -38,23 +37,37 @@ if (isset($_GET["action"]) and $_GET["action"] != "") {
 
     // array of named arrays for source stubs and destination files
     $stubs = [
+        "route-line" => [
+            'source' => 'stubs/route.php',
+            'destination' => 'route.php',
+        ],
+        "controller" => [
+            'source' => 'stubs/controller.php',
+            'destination' => 'app/Http/Controllers/' . toPascalCase($crud['name']) . 'Controller.php',
+        ],
         "view-main" => [
             'source' => 'stubs/view-main.blade.php',
-            'destination' => 'resources/views/contract/index.blade.php',
+            'destination' => 'resources/views/' . toKebabCase($crud['path']) . '/index.blade.php',
         ],
         "view-table" => [
             'source' => 'stubs/view-table.blade.php',
-            'destination' => 'resources/views/contract/table.blade.php',
+            'destination' => 'resources/views/livewire/' . toKebabCase($crud['path']) . '/table.blade.php',
         ],
         "view-modal" => [
             'source' => 'stubs/view-modal.blade.php',
-            'destination' => 'resources/views/contract/modal.blade.php',
+            'destination' => 'resources/views/livewire/' . toKebabCase($crud['path']) . '/modal.blade.php',
         ],
     ];
 
     // array of replaceable fields
     $replaceable = [
-        'path' => replaceSlashesWithDot($crud['path']),
+        'view_path' => $crud['path'],
+
+        'url' => toKebabCase($crud['name']),
+        'route_name' => toCamelCase($crud['name']) . '.index',
+
+        'controller' => toPascalCase($crud['name']) . 'Controller',
+        'view_table_path' => toKebabCase($crud['path']) . '.table',
         'view_main' => toCamelCase($crud['name']),
         'title' => toSentenceCase($crud['name']),
     ];
@@ -66,23 +79,28 @@ if (isset($_GET["action"]) and $_GET["action"] != "") {
         }
     }
 
-    foreach ($stubs as $key => $value) {
-        //getDirName
-        $instance->getDirName($value['destination'])
-            ->createDir($instance->result)
-            ->fileToString($value['source'])
-            ->searchReplace($search_replace_arr)
-            ->createFile('_cruds' . '/' . $path_start . '/' . $value['destination'], $instance->result);
+    foreach ($stubs as $stub) {
+
+        $dir = $instance->getDirName($stub['destination'])
+            ->createDir($instance->result);
+        $content = $instance->fileToString($stub['source'])
+            ->searchReplace($search_replace_arr);
+        $instance->createFile('_cruds' . '/' . $stub['destination'], $content->result);
+
+        echo "<hr>";
+        echo $stub['destination'] . "<br>";
+        echo $dir . "<br>";
+        echo "<hr>";
+        echo "<pre>";
+        echo $content->result;
+        echo "</pre>";
     }
 
     // open file and process text
-    $results = $instance->fileToString("stubs/view-main.blade.php")
-        ->searchReplace($search_replace_arr);
+    // $results = $instance->fileToString("stubs/view-main.blade.php")
+    //     ->searchReplace($search_replace_arr);
     //->toArray();
 
-    // print results
-    echo "<pre>";
-    print_r($results);
-    echo "</pre>";
+
 } //end if
 ?>

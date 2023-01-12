@@ -22,11 +22,24 @@ function toSnakeCase($phrase)
     return $result;
 }
 
+//function to convert phrase to kebab case [kebab-case]
+function toKebabCase($phrase)
+{
+    return \implode('-', \array_map('\strtolower', words(\preg_replace("/['\x{2019}]/u", '', $phrase))));
+}
+
 //function to convert phrase to sentence case [Sentence case]
 function toSentenceCase($phrase)
 {
     $result = ucfirst(strtolower($phrase));
     return $result;
+}
+
+//Splits string into an array of its words.
+function words($value, $pattern = null)
+{
+    $pattern = $pattern ?: '/[^\pL\pM\pN\pP\pS]+/u';
+    return preg_split($pattern, $value, -1, PREG_SPLIT_NO_EMPTY);
 }
 
 //function to replace all slashed with a dot

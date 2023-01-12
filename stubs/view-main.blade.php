@@ -36,7 +36,7 @@
             @include('partials.alerts')
 
 
-            @livewire('{{ path }}.{{ view_main }}')
+            @livewire('{{ view_path }}.{{ view_main }}')
 
 
         </div>

@@ -40,7 +40,7 @@ class Crudgen
         if (!file_exists($path)) {
             $this->result = mkdir($path, 0777, true);
         }
-        return $this;
+        return $path;
     }
 
     //create directory, create file, write content. Method chainable.
@@ -58,6 +58,12 @@ class Crudgen
     public function toArray()
     {
         return (array) $this->result;
+    }
+
+    //return result as string
+    public function toString()
+    {
+        return (string) $this->result;
     }
 
     //search and replace. Method chainable.
