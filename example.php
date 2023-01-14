@@ -49,6 +49,7 @@ if (isset($_GET["action"]) and $_GET["action"] != "") {
     $name_in_camel_case = toCamelCase($crud['name']);
     $name_in_pascal_case = toPascalCase($crud['name']);
     $name_in_sentence_case = toSentenceCase($crud['name']);
+    $name_in_kebab_case = toKebabCase($crud['name']);
 
     // array of named arrays for source stubs and destination files
     $stubs = [
@@ -76,14 +77,14 @@ if (isset($_GET["action"]) and $_GET["action"] != "") {
 
     // array of replaceable fields
     $replaceable = [
-        //route
-        'url' => toKebabCase($crud['name']),
+
+        'url' => $name_in_kebab_case,
         'controller' => $name_in_pascal_case . 'Controller',
         'route_name' => $name_in_camel_case . '.index',
-        //controller
+
         'view_main' => $path_with_dots . '.' . $name_in_camel_case,
-        //view-main
-        'view_path' => $path_with_dots . '.' . $name_in_camel_case,
+
+        //'view_path' => $path_with_dots . '.' . $name_in_camel_case,
 
         'view_table_path' => $path_with_dots . '.table',
         'title' => $name_in_sentence_case,
@@ -107,9 +108,10 @@ if (isset($_GET["action"]) and $_GET["action"] != "") {
         $replaced = searchReplace($search_replace_arr, $content);
         //encode html
         $encoded = htmlEncode($replaced);
-        //create file
+        //file path
         $file = '_cruds' . '/' . $stub['destination'];
-        $instance->createFile($file, $content);
+        //create file
+        $instance->createFile($file, $replaced);
 
         echo "<div style='background-color:LightBlue;padding: 10px;'>";
         echo $stub['destination'] . "<br>";

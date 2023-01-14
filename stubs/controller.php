@@ -8,6 +8,6 @@ class {{ controller }} extends Controller
 {
     public function index()
     {
-        return view('{{ view_main }}');
+        return view('{{ view_main }}'); // {{ view_main }}
     }
 }
