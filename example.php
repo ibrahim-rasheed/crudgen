@@ -96,7 +96,6 @@ if (isset($_GET["action"]) and $_GET["action"] != "") {
         }
     }
 
-    print_r($search_replace_arr);
 
     foreach ($stubs as $stub) {
 
