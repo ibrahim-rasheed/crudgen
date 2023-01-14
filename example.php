@@ -20,8 +20,6 @@
     </form>
 
 
-    <p>Route::get('/contract', 'ContractTypesController@index')->name('contract.index');</p>
-
 </body>
 
 </html>
@@ -43,44 +41,52 @@ if (isset($_GET["action"]) and $_GET["action"] != "") {
         'name' => 'working hour', // Preferably singular tense, one word. If more than one word, use space to separate. eg: working hour
     ];
 
-    // path start string
-    $path_start = date('Y-m-d-') . getRandomString(4);
+
+    // prepared variables
+    $random_string = date('Y-m-d-') . getRandomString(4);
+    $path_with_slashes = pathWithSlashes($crud['path']);
+    $path_with_dots = $crud['path'];
+    $name_in_camel_case = toCamelCase($crud['name']);
+    $name_in_pascal_case = toPascalCase($crud['name']);
+    $name_in_sentence_case = toSentenceCase($crud['name']);
 
     // array of named arrays for source stubs and destination files
     $stubs = [
         "route-line" => [
-            'source' => 'stubs/route.php.stub',
+            'source' => 'stubs/route.php',
             'destination' => 'route.php',
         ],
         "controller" => [
             'source' => 'stubs/controller.php',
-            'destination' => 'app/Http/Controllers/' . toPascalCase($crud['name']) . 'Controller.php',
+            'destination' => 'app/Http/Controllers/' . $name_in_pascal_case . 'Controller.php',
         ],
         "view-main" => [
             'source' => 'stubs/view-main.blade.php',
-            'destination' => 'resources/views/' . toKebabCase($crud['path']) . '/index.blade.php',
+            'destination' => 'resources/views/' . $path_with_slashes . '/' . $name_in_camel_case . '.blade.php',
         ],
         "view-table" => [
             'source' => 'stubs/view-table.blade.php',
-            'destination' => 'resources/views/livewire/' . toKebabCase($crud['path']) . '/table.blade.php',
+            'destination' => 'resources/views/livewire/' . $path_with_slashes . '/table.blade.php',
         ],
         "view-modal" => [
             'source' => 'stubs/view-modal.blade.php',
-            'destination' => 'resources/views/livewire/' . toKebabCase($crud['path']) . '/modal.blade.php',
+            'destination' => 'resources/views/livewire/' . $path_with_slashes . '/modal.blade.php',
         ],
     ];
 
     // array of replaceable fields
     $replaceable = [
-        'view_path' => $crud['path'],
-
+        //route
         'url' => toKebabCase($crud['name']),
-        'route_name' => toCamelCase($crud['name']) . '.index',
+        'controller' => $name_in_pascal_case . 'Controller',
+        'route_name' => $name_in_camel_case . '.index',
+        //controller
+        'view_main' => $path_with_dots . '.' . $name_in_camel_case,
+        //view-main
+        'view_path' => $path_with_dots . '.' . $name_in_camel_case,
 
-        'controller' => toPascalCase($crud['name']) . 'Controller',
-        'view_table_path' => toKebabCase($crud['path']) . '.table',
-        'view_main' => toCamelCase($crud['name']),
-        'title' => toSentenceCase($crud['name']),
+        'view_table_path' => $path_with_dots . '.table',
+        'title' => $name_in_sentence_case,
     ];
 
     // add replaceable fields to search and replace array if they are not empty
@@ -90,10 +96,12 @@ if (isset($_GET["action"]) and $_GET["action"] != "") {
         }
     }
 
+    print_r($search_replace_arr);
+
     foreach ($stubs as $stub) {
 
-        //create and get dir name
-        $dir = $instance->getDirName($stub['destination'])->createDir($instance->result);
+        //get dir name
+        $dir = dirname($stub['destination']);
         //get file content
         $content = fileToString($stub['source']);
         //replace fields

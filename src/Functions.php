@@ -42,11 +42,11 @@ function words($value, $pattern = null)
     return preg_split($pattern, $value, -1, PREG_SPLIT_NO_EMPTY);
 }
 
-//function to replace all slashed with a dot
-function replaceSlashesWithDot($phrase)
+//function to replace all dots with slashes
+function pathWithSlashes($string)
 {
-    $result = str_replace('/', '.', $phrase);
-    return $result;
+    $slashed = str_replace('.', '/', $string);
+    return toKebabCase($slashed);
 }
 
 //function to get a random string of a given length

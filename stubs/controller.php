@@ -8,6 +8,6 @@ class {{ controller }} extends Controller
 {
     public function index()
     {
-        return view('livewire.{{ view_table_path }}');
+        return view('{{ view_main }}');
     }
 }
