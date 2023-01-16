@@ -26,35 +26,35 @@
                 </tr>
             </thead>
             <tbody>
-                @if ($contract_types == null)
+                @if ($model_data == null)
                     <tr>
                         <td colspan="3" align="center">
                             No post Found.
                         </td>
                     </tr>
-                @elseif (count($contract_types) > 0)
-                    @foreach ($contract_types as $contract)
+                @elseif (count($model_data) > 0)
+                    @foreach ($model_data as $item)
                         <tr>
                             <td>
-                                {{ $contract->id }}
+                                {{ $item->id }}
                             </td>
                             <td>
-                                {{ $contract->name }}
+                                {{ $item->name }}
                             </td>
                             <td>
-                                {{ $contract->name_dhiv }}
+                                {{ $item->name_dhiv }}
                             </td>
                             <td>
-                                @if ($contract->status == 'Active')
-                                    <span class="badge badge-success">{{ $contract->status }}</span>
+                                @if ($item->status == 'Active')
+                                    <span class="badge badge-success">{{ $item->status }}</span>
                                 @else
-                                    <span class="badge badge-warning">{{ $contract->status }}</span>
+                                    <span class="badge badge-warning">{{ $item->status }}</span>
                                 @endif
                             </td>
                             <td>
-                                <button data-toggle="modal" data-target="#modal" wire:click="edit({{ $contract->id }})"
+                                <button data-toggle="modal" data-target="#modal" wire:click="edit({{ $item->id }})"
                                     wire:loading.attr="disabled" class="btn btn-primary btn-sm">Edit</button>
-                                <button onclick="deletePost({{ $contract->id }})"
+                                <button onclick="deletePost({{ $item->id }})"
                                     class="btn btn-danger btn-sm">Delete</button>
                             </td>
                         </tr>
@@ -92,7 +92,7 @@
     </script>
 
 
-    @include('livewire.contract.create')
+    @include('livewire.{{ view_modal_path }}')
 
 
 

@@ -8,6 +8,6 @@ class Create extends Component
 {
     public function render()
     {
-        return view('livewire.contract.create');
+        return view('livewire.{{ view_modal_path }}');
     }
 }

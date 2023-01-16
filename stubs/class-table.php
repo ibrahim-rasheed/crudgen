@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Livewire\Contract;
+// namespace App\Http\Livewire\Contract;
+namespace App\Http\Livewire\{{ path_with_backslashes }};
 
-use App\ContractTypes;
+use App\{{ model }};
 use Livewire\Component;
 
-class Show extends Component
+class Table extends Component
 {
-    public $contract_types;
+    public $model_data;
     public $pid, $name, $name_dhiv;
     public $updatePost = false;
 
@@ -24,7 +25,7 @@ class Show extends Component
 
     public function render()
     {
-        $this->contract_types = ContractTypes::all();
+        $this->model_data = {{ model }}::all();
         return view('livewire.contract.show');
     }
 
@@ -38,7 +39,7 @@ class Show extends Component
         try {
 
             // Create Post
-            $upsert = ContractTypes::updateOrInsert(
+            $upsert = {{ model }}::updateOrInsert(
                 [
                     'id' => $this->pid
                 ],
@@ -78,7 +79,7 @@ class Show extends Component
     public function destroy($id)
     {
         try {
-            ContractTypes::find($id)->delete();
+            {{ model }}::find($id)->delete();
             session()->flash('success', "Post Deleted Successfully!!");
         } catch (\Exception $e) {
             session()->flash('error', "Something went wrong while deleting!!!");
@@ -88,7 +89,7 @@ class Show extends Component
 
     public function edit($id)
     {
-        $item = ContractTypes::findOrFail($id);
+        $item = {{ model }}::findOrFail($id);
         $this->pid = $item->id;
         $this->name = $item->name;
         $this->name_dhiv = $item->name_dhiv;

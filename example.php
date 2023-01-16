@@ -45,11 +45,13 @@ if (isset($_GET["action"]) and $_GET["action"] != "") {
     // prepared variables
     $random_string = date('Y-m-d-') . getRandomString(4);
     $path_with_slashes = pathWithSlashes($crud['path']);
+    $path_with_backslashes = pathWithBackSlashes($crud['path']);
     $path_with_dots = $crud['path'];
     $name_in_camel_case = toCamelCase($crud['name']);
     $name_in_pascal_case = toPascalCase($crud['name']);
     $name_in_sentence_case = toSentenceCase($crud['name']);
     $name_in_kebab_case = toKebabCase($crud['name']);
+    $name_in_snake_case = toSnakeCase($crud['name']);
 
     // array of named arrays for source stubs and destination files
     $stubs = [
@@ -73,21 +75,33 @@ if (isset($_GET["action"]) and $_GET["action"] != "") {
             'source' => 'stubs/view-modal.blade.php',
             'destination' => 'resources/views/livewire/' . $path_with_slashes . '/modal.blade.php',
         ],
+        "class-table" => [
+            'source' => 'stubs/class-table.php',
+            'destination' => 'app/Http/Livewire/' . $path_with_slashes . '/Table.php',
+        ],
+        "class-modal" => [
+            'source' => 'stubs/class-modal.php',
+            'destination' => 'app/Http/Livewire/' . $path_with_slashes . '/Modal.php',
+        ],
     ];
 
     // array of replaceable fields
     $replaceable = [
-
+        // route
         'url' => $name_in_kebab_case,
         'controller' => $name_in_pascal_case . 'Controller',
         'route_name' => $name_in_camel_case . '.index',
-
+        // controller
         'view_main' => $path_with_dots . '.' . $name_in_camel_case,
-
-        //'view_path' => $path_with_dots . '.' . $name_in_camel_case,
-
-        'view_table_path' => $path_with_dots . '.table',
+        // view-main
         'title' => $name_in_sentence_case,
+        'view_table_path' => $path_with_dots . '.table',
+        'view_modal_path' => $path_with_dots . '.modal',
+        // table class
+        'path_with_backslashes' => $path_with_backslashes,
+        'model' => $name_in_pascal_case,
+        'name_in_snake_case' => $name_in_snake_case,
+
     ];
 
     // add replaceable fields to search and replace array if they are not empty

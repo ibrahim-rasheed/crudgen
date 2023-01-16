@@ -58,6 +58,13 @@ function pathWithSlashes($string)
     return toKebabCase($slashed);
 }
 
+//function to replace all dots with back slashes
+function pathWithBackSlashes($string)
+{
+    $slashed = str_replace('.', '\\', $string);
+    return toKebabCase($slashed);
+}
+
 //function to get a random string of a given length
 function getRandomString($length)
 {
