@@ -77,11 +77,11 @@ if (isset($_GET["action"]) and $_GET["action"] != "") {
         ],
         "class-table" => [
             'source' => 'stubs/class-table.php',
-            'destination' => 'app/Http/Livewire/' . $path_with_slashes . '/Table.php',
+            'destination' => 'app/Http/Livewire/' . $path_with_slashes . '/table.php',
         ],
         "class-modal" => [
             'source' => 'stubs/class-modal.php',
-            'destination' => 'app/Http/Livewire/' . $path_with_slashes . '/Modal.php',
+            'destination' => 'app/Http/Livewire/' . $path_with_slashes . '/modal.php',
         ],
     ];
 
@@ -101,7 +101,6 @@ if (isset($_GET["action"]) and $_GET["action"] != "") {
         'path_with_backslashes' => $path_with_backslashes,
         'model' => $name_in_pascal_case,
         'name_in_snake_case' => $name_in_snake_case,
-
     ];
 
     // add replaceable fields to search and replace array if they are not empty
