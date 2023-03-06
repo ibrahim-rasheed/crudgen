@@ -12,7 +12,7 @@ function dd($var)
 //function to convert phrase to camel case [camelCase]
 function toCamelCase($phrase)
 {
-    $result = str_replace(' ', '', ucwords(str_replace('_', ' ', $phrase)));
+    $result = str_replace(' ', '', ucwords(str_replace(['_', '-'], ' ', $phrase)));
     $result[0] = strtolower($result[0]);
     return $result;
 }
@@ -20,13 +20,15 @@ function toCamelCase($phrase)
 //function to convert phrase to pascal case [PascalCase]
 function toPascalCase($phrase)
 {
-    $result = str_replace(' ', '', ucwords(str_replace('_', ' ', $phrase)));
+    $result = str_replace(' ', '', ucwords(str_replace(['_', '-'], ' ', $phrase)));
     return $result;
 }
 
 //function to convert phrase to snake case [snake_case]
 function toSnakeCase($phrase)
 {
+    //conver space to dash
+    $phrase = str_replace(' ', '-', $phrase);
     $result = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $phrase));
     return $result;
 }
@@ -51,18 +53,44 @@ function words($value, $pattern = null)
     return preg_split($pattern, $value, -1, PREG_SPLIT_NO_EMPTY);
 }
 
+//case processor function to convert all array values to given case
+function caseProcessor($array, $case)
+{
+    $result = [];
+    foreach ($array as $key => $value) {
+        $result[$key] = $case($value);
+    }
+    return $result;
+}
+
+//explode given path with . and convert each value to given case with caseProcessor function
+//and implode the array back to a string with given separator
+function pathProcessor($path, $case, $separator)
+{
+    $pathArray = explode('.', $path);
+    $pathArray = caseProcessor($pathArray, $case);
+    $path = implode($separator, $pathArray);
+    // //remove charcters given by an optional parameter
+    // if (func_num_args() > 3) {
+    //     $remove = func_get_arg(3);
+    //     $path = str_replace($remove, '', $path);
+    // }
+    return $path;
+}
+
+
 //function to replace all dots with slashes
 function pathWithSlashes($string)
 {
     $slashed = str_replace('.', '/', $string);
-    return toKebabCase($slashed);
+    return toPascalCase($slashed);
 }
 
 //function to replace all dots with back slashes
 function pathWithBackSlashes($string)
 {
     $slashed = str_replace('.', '\\', $string);
-    return toKebabCase($slashed);
+    return toPascalCase($slashed);
 }
 
 //function to get a random string of a given length

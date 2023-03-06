@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Contract;
+namespace App\Http\Livewire\{{ path_with_backslashes }};
 
 use Livewire\Component;
 

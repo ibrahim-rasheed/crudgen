@@ -35,23 +35,26 @@ if (isset($_GET["action"]) and $_GET["action"] != "") {
     // initialize class
     $instance = new Crudgen();
 
-    // array of crud information
-    $crud = [
-        'path' => 'duty.working-hour', // words separated by a hyphen (-) and folder names separated by a dot (.) eg: working-hour.another-hour
-        'name' => 'working hour', // Preferably singular tense, one word. If more than one word, use space to separate. eg: working hour
+    // object of crud information
+    $crud = (object) [
+        'path' => 'duty.working-hours', // words separated by a hyphen (-) and folder names separated by a dot (.) eg: working-hour.another-hour
+        'name' => 'working hours', // Preferably singular tense, one word. If more than one word, use space to separate. eg: working hour
     ];
 
 
     // prepared variables
     $random_string = date('Y-m-d-') . getRandomString(4);
-    $path_with_slashes = pathWithSlashes($crud['path']);
-    $path_with_backslashes = pathWithBackSlashes($crud['path']);
-    $path_with_dots = $crud['path'];
-    $name_in_camel_case = toCamelCase($crud['name']);
-    $name_in_pascal_case = toPascalCase($crud['name']);
-    $name_in_sentence_case = toSentenceCase($crud['name']);
-    $name_in_kebab_case = toKebabCase($crud['name']);
-    $name_in_snake_case = toSnakeCase($crud['name']);
+
+    echo toKebabCase($crud->name);
+
+    $path_with_backslashes = pathWithBackSlashes($crud->path);
+    $path_with_dots = toPascalCase($crud->path);
+    $path_with_dots_in_camel = toCamelCase($path_with_dots);
+
+    $name_in_pascal_case = toPascalCase($crud->name);
+    $name_in_sentence_case = toSentenceCase($crud->name);
+    $name_in_kebab_case = toKebabCase($crud->name);
+    $name_in_snake_case = toSnakeCase($crud->name);
 
     // array of named arrays for source stubs and destination files
     $stubs = [
@@ -61,46 +64,46 @@ if (isset($_GET["action"]) and $_GET["action"] != "") {
         ],
         "controller" => [
             'source' => 'stubs/controller.php',
-            'destination' => 'app/Http/Controllers/' . $name_in_pascal_case . 'Controller.php',
+            'destination' => 'app/Http/Controllers/' . toPascalCase($crud->name) . 'Controller.php',
         ],
         "view-main" => [
             'source' => 'stubs/view-main.blade.php',
-            'destination' => 'resources/views/' . $path_with_slashes . '/' . $name_in_camel_case . '.blade.php',
+            'destination' => 'resources/views/' . pathProcessor($crud->path, 'toSnakeCase', '/') . '/' . toSnakeCase($crud->name) . '.blade.php',
         ],
         "view-table" => [
             'source' => 'stubs/view-table.blade.php',
-            'destination' => 'resources/views/livewire/' . $path_with_slashes . '/table.blade.php',
+            'destination' => 'resources/views/livewire/' . pathProcessor($crud->path, 'toSnakeCase', '/') . '/table.blade.php',
         ],
         "view-modal" => [
             'source' => 'stubs/view-modal.blade.php',
-            'destination' => 'resources/views/livewire/' . $path_with_slashes . '/modal.blade.php',
+            'destination' => 'resources/views/livewire/' . pathProcessor($crud->path, 'toSnakeCase', '/') . '/modal.blade.php',
         ],
         "class-table" => [
             'source' => 'stubs/class-table.php',
-            'destination' => 'app/Http/Livewire/' . $path_with_slashes . '/table.php',
+            'destination' => 'app/Http/Livewire/' . pathProcessor($crud->path, 'toPascalCase', '/') . '/Table.php',
         ],
         "class-modal" => [
             'source' => 'stubs/class-modal.php',
-            'destination' => 'app/Http/Livewire/' . $path_with_slashes . '/modal.php',
+            'destination' => 'app/Http/Livewire/' . pathProcessor($crud->path, 'toPascalCase', '/') . '/Modal.php',
         ],
     ];
 
     // array of replaceable fields
     $replaceable = [
         // route
-        'url' => $name_in_kebab_case,
-        'controller' => $name_in_pascal_case . 'Controller',
-        'route_name' => $name_in_camel_case . '.index',
+        'url' => toKebabCase($crud->name),
+        'controller' => toPascalCase($crud->name) . 'Controller',
+        'route_name' => toCamelCase($crud->name) . '.index',
         // controller
-        'view_main' => $path_with_dots . '.' . $name_in_camel_case,
+        'view_main' => pathProcessor($crud->path, 'toSnakeCase', '.') . '.' . toSnakeCase($crud->name),
         // view-main
-        'title' => $name_in_sentence_case,
-        'view_table_path' => $path_with_dots . '.table',
-        'view_modal_path' => $path_with_dots . '.modal',
+        'title' => toSentenceCase($crud->name),
+        'view_table_path' => pathProcessor($crud->path, 'toSnakeCase', '.') . '.table',
+        'view_modal_path' => pathProcessor($crud->path, 'toSnakeCase', '.') . '.modal',
         // table class
-        'path_with_backslashes' => $path_with_backslashes,
-        'model' => $name_in_pascal_case,
-        'name_in_snake_case' => $name_in_snake_case,
+        'path_with_backslashes' => pathProcessor($crud->path, 'toPascalCase', '\\'),
+        'model' => toPascalCase($crud->name),
+        'name_in_snake_case' => toSnakeCase($crud->name),
     ];
 
     // add replaceable fields to search and replace array if they are not empty
